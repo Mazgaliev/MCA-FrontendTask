@@ -1,0 +1,37 @@
+<div class="container">
+
+    <div class="modal-header">
+
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="this.createPhotoForm">
+            <div class="row">
+                <label for="title">Photo Title</label>
+                <input id="title" type="text" formControlName="title">
+            </div>
+
+            <div class="row">
+                <label for="thumbnailUrl">Thumbnail Url </label>
+                <input id="thumbnailUrl" type="text" formControlName="thumbnailUrl">
+            </div>
+            <div class="row">
+                <label for="url">Photo Url</label>
+                <input id="url" type="text" formControlName="url">
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div class="row">
+            <div class="col">
+                <button class="btn brn-primary" 
+                [disabled]="!this.createPhotoForm.valid"
+                (click)="createPhoto()"><i class="material-icons"
+                        >add</i></button>
+            </div>
+            <div class="col"></div>
+            <div class="col">
+                <a><i class="material-icons" (click)="close()">cancel</i></a>
+            </div>
+        </div>
+    </div>
+</div>

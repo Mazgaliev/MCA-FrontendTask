@@ -1,0 +1,34 @@
+<div class="container">
+    <div class="modal-header">
+        <h4 [innerText]="'Edit picture with id: '+ photo?.id"></h4>
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="editPictureForm">
+            <div class="container row">
+                <label for="title"> Photo Title</label>
+                <input id="title" type="text" formControlName="title" [placeholder]="photo?.title">
+            </div>
+            <div class="container row">
+                <label for="url"> Photo url</label>
+                <input id="url" type="text" formControlName="url" [placeholder]="photo?.url">
+            </div>
+            <div class="container row">
+                <label for="thumbnailUrl"> Photo thumbnail url</label>
+                <input id="thumbnailUrl" type="text" formControlName="thumbnailUrl" [placeholder]="photo?.thumbnailUrl">
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <div class="row">
+            <div class="col">
+                <button [disabled]="!editPictureForm.touched && !editPictureForm.valid"><i class="material-icons"
+                        (click)="editPhoto()">edit_note</i></button>
+            </div>
+            <div class="col">
+                <a><i class="material-icons" (click)="close()">cancel</i></a>
+            </div>
+        </div>
+    </div>
+</div>
