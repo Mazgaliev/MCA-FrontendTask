@@ -21,15 +21,18 @@ import { AppEffects } from './store/effects';
 import { reducer } from './store/reducer';
 import { LoadingComponentComponent } from './shared/components/loading-component/loading-component.component';
 import { CreatePhotoComponent } from './components/view-photos/create-photo/create-photo.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
+
+  {
+    path: "home", component: HomeComponent
+  },
   {
     path: "view", component: ViewPhotosComponent
   },
-  {
-    path: "home", component: HomeComponent
-  }
+  { path: '**', component: PageNotFoundComponent }
 ]
 
 @NgModule({
@@ -42,6 +45,7 @@ const routes: Routes = [
     DeletePhotoComponent,
     LoadingComponentComponent,
     CreatePhotoComponent,
+    PageNotFoundComponent,
   ],
   imports: [
     BrowserModule,

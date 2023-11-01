@@ -11,19 +11,23 @@ import { AppActions, Selectors } from 'src/app/store';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
+
 export class HomeComponent implements OnInit, OnDestroy {
 
   $albums = this.store.select(Selectors.selectLoadedAlbums);
   $isLoading = this.store.select(Selectors.selectLoading);
   destroyed$: Subject<void> = new Subject<void>();
+
   constructor(private readonly store: Store, private readonly router: Router, private readonly loadAlbumService: LoadAlbumsService) { }
 
   ngOnInit(): void {
-    this.store.dispatch(AppActions.fetchAlbums())
+
+    this.store.dispatch(AppActions.fetchAlbums());
+
     this.loadAlbumService.loadMoreAlbums(1);
   }
 
-
+  
 
   loadMore(): void {
 
