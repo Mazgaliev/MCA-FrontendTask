@@ -1,27 +1,31 @@
-<div class="row">
+<div *ngIf="selectedAlbum" class="container">
+    <div class="row">
 
-    <div style="align-items: end;" class="col">
-        <a><i style="font-size:  45px;" class="material-icons"
-                (click)="openCreatePhotoModal()">add_photo_alternate</i></a>
-    </div>
+        <div style="align-items: end;" class="col">
+            <a><i style="font-size:  45px;" class="material-icons"
+                    (click)="openCreatePhotoModal()">add_photo_alternate</i></a>
+        </div>
 
-    <div class="col"></div>
+        <div class="col"></div>
 
-    <div class="col text-end">
-        <h2 [innerText]="'Album '+ ($selectedAlbum|async)?.id"></h2>
-    </div>
-</div>
-<div class="responsive" *ngFor="let photo of ($selectedAlbum|async)?.photos">
-    <div class="gallery">
-        <a target="_blank" [href]="photo.url">
-            <img [src]="photo.url" alt="Cinque Terre" width="600" height="400">
-        </a>
-        <div class="desc" [innerText]="photo.title"></div>
-        <div>
-            <i class="material-icons" (click)="openEditPhotoModal(photo)">edit</i>
-            <i class="material-icons" (click)="openDeleteItemModal(photo)">delete</i>
+        <div class="col text-end">
+            <h2 [innerText]="'Album '+ selectedAlbum.id"></h2>
         </div>
     </div>
+
+    <div class="responsive" *ngFor="let photo of selectedAlbum.photos">
+        <div class="gallery">
+            <a target="_blank" [href]="photo.url">
+                <img [src]="photo.url" alt="Cinque Terre" width="600" height="400">
+            </a>
+            <div class="desc" [innerText]="photo.title"></div>
+            <div>
+                <i class="material-icons" (click)="openEditPhotoModal(photo)">edit</i>
+                <i class="material-icons" (click)="openDeleteItemModal(photo)">delete</i>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 

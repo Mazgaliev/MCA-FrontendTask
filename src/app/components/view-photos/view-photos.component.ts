@@ -1,11 +1,12 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { Album } from 'src/app/model/Albums';
 import { CreatePhoto } from 'src/app/model/CreatePhoto';
 import { Photo } from 'src/app/model/Photo';
-import { AppActions, Selectors } from 'src/app/store';
+import { AppActions } from 'src/app/store';
 import { CreatePhotoComponent } from './create-photo/create-photo.component';
 import { DeletePhotoComponent } from './delete-photo/delete-photo.component';
 import { EditPhotoComponent } from './edit-photo/edit-photo.component';
@@ -15,48 +16,51 @@ import { EditPhotoComponent } from './edit-photo/edit-photo.component';
   templateUrl: './view-photos.component.html',
   styleUrls: ['./view-photos.component.css']
 })
-export class ViewPhotosComponent implements OnDestroy {
+export class ViewPhotosComponent implements OnDestroy, OnInit {
 
-  $selectedAlbum: Observable<Album | undefined> = this.store.select(Selectors.selectPickedAlbum);
   $destroy = new Subject<void>();
+  selectedAlbum: Album | undefined;
+  constructor(private readonly store: Store,
+    private readonly modalService: NgbModal,
+    private readonly activeRoute: ActivatedRoute,
+    private readonly router: Router) { }
 
-  constructor(private readonly store: Store, private modalService: NgbModal) { }
-  ngOnDestroy(): void {
-    // throw new Error('Method not implemented.');
+  ngOnInit(): void {
 
-    this.store.dispatch(AppActions.clearPickedAlbum());
+
+    this.activeRoute.data
+      .pipe(takeUntil(this.$destroy))
+      .subscribe(data => {
+        this.selectedAlbum = data['album'];
+      });
+
+    if (this.selectedAlbum == null) {
+      this.router.navigate(['error']);
+    }
+
   }
+
 
   openCreatePhotoModal(): void {
     const modalRef = this.modalService.open(CreatePhotoComponent);
-    var userId: number = 0;
-    var albumId: number = 0;
-
+    
     modalRef.result.then((formValue) => {
       if (formValue == false) {
         //do nothing
       } else {
 
-        this.$selectedAlbum.pipe(
-          takeUntil(this.$destroy)).
-          subscribe((val) => {
-            userId = val!.userId;
-            albumId = val!.id;
-          })
-
         const photoObj: CreatePhoto = {
-          userId: userId,
-          albumId: albumId,
+          userId: this.selectedAlbum!.userId,
+          albumId: this.selectedAlbum!.id,
           title: formValue.title,
           url: formValue.url,
           thumbnailUrl: formValue.thumbnailUrl
         };
+
         //dispatch new obj
         console.log(photoObj);
         this.store.dispatch(AppActions.savePhoto({ photoObject: photoObj }));
 
-        this.$destroy.next();
-        this.$destroy.complete();
       }
     })
   }
@@ -81,5 +85,12 @@ export class ViewPhotosComponent implements OnDestroy {
     modalRef.result.then((val) => val == true ? this.store.dispatch(AppActions.deletePhoto({ photoId: photo.id })) : console.log("Error when deleting photo"))
   }
 
+  ngOnDestroy(): void {
+    // throw new Error('Method not implemented.');
 
+    this.store.dispatch(AppActions.clearPickedAlbum());
+
+    this.$destroy.next();
+    this.$destroy.complete();
+  }
 }

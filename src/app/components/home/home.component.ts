@@ -16,7 +16,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   $albums = this.store.select(Selectors.selectLoadedAlbums);
   $isLoading = this.store.select(Selectors.selectLoading);
-  destroyed$: Subject<void> = new Subject<void>();
 
   constructor(private readonly store: Store, private readonly router: Router, private readonly loadAlbumService: LoadAlbumsService) { }
 
@@ -27,7 +26,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.loadAlbumService.loadMoreAlbums(1);
   }
 
-  
+
 
   loadMore(): void {
 
@@ -40,16 +39,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     if (album != undefined) {
 
-      const a: Album = { id: album.id, userId: album.userId, photos: album.photos, title: album.title }
-      this.store.dispatch(AppActions.setClickedAlbum({ album: a }));
-      this.router.navigateByUrl("/view")
+      this.store.dispatch(AppActions.setClickedAlbum({ album: album }));
+      
+      this.router.navigate(["/view", album.id]);
     }
 
   }
 
   ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
 
     this.store.dispatch(AppActions.clearLoadedAlbum())
     this.loadAlbumService.resetAlbumLoader();

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { exhaustMap, map } from "rxjs";
+import { EMPTY, catchError, exhaustMap, map, of } from "rxjs";
 import { AppActions } from ".";
 import { Album } from "../model/Albums";
 import { HttpService } from "../shared/service/HttpService.service";
@@ -49,10 +49,11 @@ export class AppEffects {
                     map(photos => {
 
                         return AppActions.loadAlbumPhotosSuccess({ photos: photos, albumId: albumId.albumId })
-                    })
-                ))
+                    }))
+            )
         )
     )
+
 
 
     savePhoto$ = createEffect(

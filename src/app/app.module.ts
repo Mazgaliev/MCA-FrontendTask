@@ -14,14 +14,16 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AppComponent } from './app.component';
 import { AlbumComponent } from './components/home/album/album.component';
 import { HomeComponent } from './components/home/home.component';
+import { CreatePhotoComponent } from './components/view-photos/create-photo/create-photo.component';
 import { DeletePhotoComponent } from './components/view-photos/delete-photo/delete-photo.component';
 import { EditPhotoComponent } from './components/view-photos/edit-photo/edit-photo.component';
 import { ViewPhotosComponent } from './components/view-photos/view-photos.component';
+import { canActivateViewPhotoGuard } from './guards/view-photo.guard';
+import { LoadingComponentComponent } from './shared/components/loading-component/loading-component.component';
+import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
+import { albumResolve } from './shared/service/RouteResolver.service';
 import { AppEffects } from './store/effects';
 import { reducer } from './store/reducer';
-import { LoadingComponentComponent } from './shared/components/loading-component/loading-component.component';
-import { CreatePhotoComponent } from './components/view-photos/create-photo/create-photo.component';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -30,7 +32,9 @@ const routes: Routes = [
     path: "home", component: HomeComponent
   },
   {
-    path: "view", component: ViewPhotosComponent
+    path: "view/:albumId", component: ViewPhotosComponent,
+    resolve: { album: albumResolve },
+    canActivate: [canActivateViewPhotoGuard]
   },
   { path: '**', component: PageNotFoundComponent }
 ]
