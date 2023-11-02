@@ -1,16 +1,18 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { EMPTY, catchError, exhaustMap, map, of } from "rxjs";
+import { EMPTY, catchError, exhaustMap, map, of, tap } from "rxjs";
 import { AppActions } from ".";
 import { Album } from "../model/Albums";
 import { HttpService } from "../shared/service/HttpService.service";
+import { Router } from "@angular/router";
 
 
 
 @Injectable()
 export class AppEffects {
     constructor(private readonly httpService: HttpService,
-        private readonly actions$: Actions) { }
+        private readonly actions$: Actions,
+        private readonly router: Router) { }
 
 
     fetchAlbums$ = createEffect(
@@ -72,7 +74,11 @@ export class AppEffects {
         () => this.actions$.pipe(
             ofType(AppActions.deletePhoto),
             exhaustMap(data => this.httpService.deletePhoto(data.photoId).pipe(
-                map(() => AppActions.deletePhotoSuccess({ photoId: data.photoId }))
+                map(() => {
+
+                    this.router.navigate([{ outlets: { modal: null } }]);
+                    return AppActions.deletePhotoSuccess({ photoId: data.photoId })
+                })
             ))
         )
     )

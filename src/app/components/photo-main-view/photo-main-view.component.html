@@ -1,28 +1,28 @@
 <div class="container">
-    <div class="container">
+    <div class="container" *ngIf="photo">
         <div class="row">
             <div class="col-3">
-                <h3>Photo Id</h3>
+                <h3 [innerText]="'Photo id: ' +photo.id"></h3>
             </div>
             <div class="col"></div>
-            <div class="col-2">
-                Dismiss button
+            <div class="col-2 text-end" (click)="close()">
+                <i style="font-size: 50px;" class="material-icons">cancel</i>
             </div>
         </div>
         <div class="row">
             <div class="col-4"></div>
-            <div>
-                <h1>Actual Photo</h1>
+            <div class="text-center">
+                <img [src]="photo.url" width="500" height="400">
 
-                <h4>Photo Title</h4>
+                <h4 style="align-items: center;" [innerText]="photo.title"></h4>
             </div>
 
             <div class="col-4"></div>
         </div>
         <div class="row">
             <div class="col">
-                <i class="material-icons" (click)="editModal()">edit</i>
-                <i class="material-icons" (click)="deleteModal()">delete</i>
+                <i style="font-size: 50px;" class="material-icons" (click)="editModal()">edit</i>
+                <i style="font-size: 50px;" class="material-icons" (click)="deleteModal()">delete</i>
             </div>
         </div>
     </div>

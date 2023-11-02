@@ -2,14 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { Album } from 'src/app/model/Albums';
 import { CreatePhoto } from 'src/app/model/CreatePhoto';
 import { Photo } from 'src/app/model/Photo';
-import { AppActions } from 'src/app/store';
+import { AppActions, Selectors } from 'src/app/store';
 import { CreatePhotoComponent } from '../photo-main-view/create-photo/create-photo.component';
-import { DeletePhotoComponent } from '../photo-main-view/delete-photo/delete-photo.component';
-import { EditPhotoComponent } from '../photo-main-view/edit-photo/edit-photo.component';
 
 @Component({
   selector: 'app-view-photos',
@@ -20,20 +18,23 @@ export class ViewPhotosComponent implements OnDestroy, OnInit {
 
   $destroy = new Subject<void>();
   selectedAlbum: Album | undefined;
+  // $selectedAlbum: Observable<Album | undefined> = this.store.select(Selectors.selectPickedAlbum);
   constructor(private readonly store: Store,
     private readonly modalService: NgbModal,
     private readonly activeRoute: ActivatedRoute,
-    private readonly router: Router,
-    private readonly route: ActivatedRoute) { }
+    private readonly router: Router) { }
 
   ngOnInit(): void {
 
+    this.store.select(Selectors.selectPickedAlbum).pipe(takeUntil(this.$destroy)).subscribe(
+      data=>this.selectedAlbum=data
+    )
 
-    this.activeRoute.data
-      .pipe(takeUntil(this.$destroy))
-      .subscribe(data => {
-        this.selectedAlbum = data['album'];
-      });
+    // this.activeRoute.data
+    //   .pipe(takeUntil(this.$destroy))
+    //   .subscribe(data => {
+    //     this.selectedAlbum = data['album'];
+    //   });
 
     if (this.selectedAlbum == null) {
       this.router.navigate(['error']);
@@ -67,29 +68,10 @@ export class ViewPhotosComponent implements OnDestroy, OnInit {
   }
 
   openPhotoViewModal(photo: Photo): void {
-    
+
     // Store should dispatch an action that sets the picked photo
+    this.store.dispatch(AppActions.setPhoto({ photo: photo }));
     this.router.navigate([{ outlets: { modal: [photo.id] } }]);
-  }
-
-  openEditPhotoModal(photo: Photo): void {
-    const modalRef = this.modalService.open(EditPhotoComponent);
-    modalRef.componentInstance.photo = photo;
-    // this.router.navigate([photo.id, 'edit'])
-    // modalRef.result.then((val) => {
-    //   if (val == false) {
-    //     //Do nothing!
-    //   } else {
-    //     this.store.dispatch(AppActions.editPhotoData({ editedPhoto: val }));
-    //   }
-    // })
-  }
-
-  openDeleteItemModal(photo: Photo): void {
-    const modalRef = this.modalService.open(DeletePhotoComponent, { "size": "md" });
-    modalRef.componentInstance.photo = photo;
-
-    modalRef.result.then((val) => val == true ? this.store.dispatch(AppActions.deletePhoto({ photoId: photo.id })) : console.log("Error when deleting photo"))
   }
 
   ngOnDestroy(): void {

@@ -21,7 +21,7 @@ import { ViewPhotosComponent } from './components/view-photos/view-photos.compon
 import { canActivateViewPhotoGuard } from './guards/view-photo.guard';
 import { LoadingComponentComponent } from './shared/components/loading-component/loading-component.component';
 import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
-import { albumResolve } from './shared/service/RouteResolver.service';
+import { albumResolve, photoResolve } from './shared/service/RouteResolver.service';
 import { AppEffects } from './store/effects';
 import { reducer } from './store/reducer';
 import { PhotoMainViewComponent } from './components/photo-main-view/photo-main-view.component';
@@ -39,12 +39,16 @@ const routes: Routes = [
     children: [
       {
         path: ":albumId/photos", component: ViewPhotosComponent,
-        resolve: { album: albumResolve }
+        // resolve: { album: albumResolve }
       }
     ],
 
   },
-  { path: ':photoId', component: PhotoMainViewComponent, outlet: 'modal' },
+  {
+    path: ':photoId', component: PhotoMainViewComponent,
+    outlet: 'modal',
+    //  resolve: { photo: photoResolve }
+  },
 
   { path: '**', component: PageNotFoundComponent }
 ]

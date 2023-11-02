@@ -16,7 +16,7 @@
     <div class="responsive" *ngFor="let photo of selectedAlbum.photos">
         <div class="gallery" (click)="openPhotoViewModal(photo)">
             <a target="_blank" [href]="photo.url">
-                <img [src]="photo.url" alt="Cinque Terre" width="600" height="400">
+                <img [src]="photo.url" width="600" height="400">
             </a>
             <div class="desc" [innerText]="photo.title"></div>
         </div>

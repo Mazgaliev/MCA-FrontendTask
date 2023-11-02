@@ -49,8 +49,9 @@ export const reducer = createReducer(
             id: state.pickedAlbum!.id,
             userId: state.pickedAlbum!.userId,
             title: state.pickedAlbum!.title,
-            photos: state.pickedAlbum!.photos.filter(photo => photo.id != photoId.photoId)
+            photos: state.pickedAlbum!.photos.filter(photo => photo.id != photoId.photoId),
         },
+        pickedPhoto: undefined,
         loading: false
     })),
     on(editPhotoData, (state) => ({
@@ -65,6 +66,13 @@ export const reducer = createReducer(
             title: state.pickedAlbum!.title,
             photos: state.pickedAlbum!.photos
                 .map(photo => photo.id == editedPhoto.id ? { ...photo, title: editedPhoto.title, url: editedPhoto.url, thumbnailUrl: editedPhoto.thumbnailUrl } : photo)
+        },
+        pickedPhoto: {
+            id: editedPhoto.id,
+            albumId: editedPhoto.albumId,
+            url: editedPhoto.url,
+            thumbnailUrl: editedPhoto.thumbnailUrl,
+            title: editedPhoto.title
         },
         loading: false
     })),
