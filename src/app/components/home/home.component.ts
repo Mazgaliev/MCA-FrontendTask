@@ -40,8 +40,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (album != undefined) {
 
       this.store.dispatch(AppActions.setClickedAlbum({ album: album }));
-      
-      this.router.navigate(["/view", album.id]);
+
+      this.router.navigate(["view", album.id, 'photos']);
     }
 
   }

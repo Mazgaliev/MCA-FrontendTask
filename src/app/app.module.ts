@@ -14,9 +14,9 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AppComponent } from './app.component';
 import { AlbumComponent } from './components/home/album/album.component';
 import { HomeComponent } from './components/home/home.component';
-import { CreatePhotoComponent } from './components/view-photos/create-photo/create-photo.component';
-import { DeletePhotoComponent } from './components/view-photos/delete-photo/delete-photo.component';
-import { EditPhotoComponent } from './components/view-photos/edit-photo/edit-photo.component';
+import { CreatePhotoComponent } from './components/photo-main-view/create-photo/create-photo.component';
+import { DeletePhotoComponent } from './components/photo-main-view/delete-photo/delete-photo.component';
+import { EditPhotoComponent } from './components/photo-main-view/edit-photo/edit-photo.component';
 import { ViewPhotosComponent } from './components/view-photos/view-photos.component';
 import { canActivateViewPhotoGuard } from './guards/view-photo.guard';
 import { LoadingComponentComponent } from './shared/components/loading-component/loading-component.component';
@@ -24,6 +24,7 @@ import { PageNotFoundComponent } from './shared/components/page-not-found/page-n
 import { albumResolve } from './shared/service/RouteResolver.service';
 import { AppEffects } from './store/effects';
 import { reducer } from './store/reducer';
+import { PhotoMainViewComponent } from './components/photo-main-view/photo-main-view.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -32,10 +33,19 @@ const routes: Routes = [
     path: "home", component: HomeComponent
   },
   {
-    path: "view/:albumId", component: ViewPhotosComponent,
-    resolve: { album: albumResolve },
-    canActivate: [canActivateViewPhotoGuard]
+    path: "view",
+    canActivate: [canActivateViewPhotoGuard],
+
+    children: [
+      {
+        path: ":albumId/photos", component: ViewPhotosComponent,
+        resolve: { album: albumResolve }
+      }
+    ],
+
   },
+  { path: ':photoId', component: PhotoMainViewComponent, outlet: 'modal' },
+
   { path: '**', component: PageNotFoundComponent }
 ]
 
@@ -50,6 +60,7 @@ const routes: Routes = [
     LoadingComponentComponent,
     CreatePhotoComponent,
     PageNotFoundComponent,
+    PhotoMainViewComponent,
   ],
   imports: [
     BrowserModule,

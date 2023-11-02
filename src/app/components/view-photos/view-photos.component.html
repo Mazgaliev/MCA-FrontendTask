@@ -14,18 +14,13 @@
     </div>
 
     <div class="responsive" *ngFor="let photo of selectedAlbum.photos">
-        <div class="gallery">
+        <div class="gallery" (click)="openPhotoViewModal(photo)">
             <a target="_blank" [href]="photo.url">
                 <img [src]="photo.url" alt="Cinque Terre" width="600" height="400">
             </a>
             <div class="desc" [innerText]="photo.title"></div>
-            <div>
-                <i class="material-icons" (click)="openEditPhotoModal(photo)">edit</i>
-                <i class="material-icons" (click)="openDeleteItemModal(photo)">delete</i>
-            </div>
         </div>
     </div>
-
 </div>
 
 

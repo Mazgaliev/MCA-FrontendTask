@@ -7,9 +7,9 @@ import { Album } from 'src/app/model/Albums';
 import { CreatePhoto } from 'src/app/model/CreatePhoto';
 import { Photo } from 'src/app/model/Photo';
 import { AppActions } from 'src/app/store';
-import { CreatePhotoComponent } from './create-photo/create-photo.component';
-import { DeletePhotoComponent } from './delete-photo/delete-photo.component';
-import { EditPhotoComponent } from './edit-photo/edit-photo.component';
+import { CreatePhotoComponent } from '../photo-main-view/create-photo/create-photo.component';
+import { DeletePhotoComponent } from '../photo-main-view/delete-photo/delete-photo.component';
+import { EditPhotoComponent } from '../photo-main-view/edit-photo/edit-photo.component';
 
 @Component({
   selector: 'app-view-photos',
@@ -23,7 +23,8 @@ export class ViewPhotosComponent implements OnDestroy, OnInit {
   constructor(private readonly store: Store,
     private readonly modalService: NgbModal,
     private readonly activeRoute: ActivatedRoute,
-    private readonly router: Router) { }
+    private readonly router: Router,
+    private readonly route: ActivatedRoute) { }
 
   ngOnInit(): void {
 
@@ -43,7 +44,7 @@ export class ViewPhotosComponent implements OnDestroy, OnInit {
 
   openCreatePhotoModal(): void {
     const modalRef = this.modalService.open(CreatePhotoComponent);
-    
+
     modalRef.result.then((formValue) => {
       if (formValue == false) {
         //do nothing
@@ -65,17 +66,23 @@ export class ViewPhotosComponent implements OnDestroy, OnInit {
     })
   }
 
+  openPhotoViewModal(photo: Photo): void {
+    
+    // Store should dispatch an action that sets the picked photo
+    this.router.navigate([{ outlets: { modal: [photo.id] } }]);
+  }
+
   openEditPhotoModal(photo: Photo): void {
     const modalRef = this.modalService.open(EditPhotoComponent);
     modalRef.componentInstance.photo = photo;
-
-    modalRef.result.then((val) => {
-      if (val == false) {
-        //Do nothing!
-      } else {
-        this.store.dispatch(AppActions.editPhotoData({ editedPhoto: val }));
-      }
-    })
+    // this.router.navigate([photo.id, 'edit'])
+    // modalRef.result.then((val) => {
+    //   if (val == false) {
+    //     //Do nothing!
+    //   } else {
+    //     this.store.dispatch(AppActions.editPhotoData({ editedPhoto: val }));
+    //   }
+    // })
   }
 
   openDeleteItemModal(photo: Photo): void {
