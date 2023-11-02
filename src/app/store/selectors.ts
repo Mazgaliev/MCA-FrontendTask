@@ -26,3 +26,8 @@ export const selectPickedAlbum = createSelector(
     selectAppState,
     (state: AppState) => state.pickedAlbum
 )
+
+export const selectPickedPhoto = createSelector(
+    selectAppState,
+    (state: AppState) => state.pickedPhoto
+)
