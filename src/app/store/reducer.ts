@@ -1,5 +1,5 @@
 import { createReducer, on } from "@ngrx/store";
-import { clearLoadedAlbum, clearPickedAlbum, deletePhoto, deletePhotoSuccess, editPhotoData, editPhotoDataSuccess, fetchAlbums, fetchAlbumsSuccess, loadAlbumPhotos, loadAlbumPhotosSuccess, savePhotoSuccess, setClickedAlbum } from "./actions";
+import { clearLoadedAlbum, clearPickedAlbum, clearPickedPhoto, deletePhoto, deletePhotoSuccess, editPhotoData, editPhotoDataSuccess, fetchAlbums, fetchAlbumsSuccess, loadAlbumPhotos, loadAlbumPhotosSuccess, savePhotoSuccess, setClickedAlbum, setPhoto } from "./actions";
 import { initialState } from "./state";
 
 
@@ -76,6 +76,14 @@ export const reducer = createReducer(
             title: state.pickedAlbum!.title,
             photos: [photo, ...state.pickedAlbum!.photos]
         }
+    })),
+    on(setPhoto, (state, { photo }) => ({
+        ...state,
+        pickedPhoto: photo
+    })),
+    on(clearPickedPhoto, (state) => ({
+        ...state,
+        pickedPhoto: undefined
     }))
 
 )

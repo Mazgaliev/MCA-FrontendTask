@@ -22,6 +22,8 @@ const enum Actions {
     SET_CLICKED_ALBUM = '[Albums] Clicked album',
     SET_CLICKED_ALBUM_SUCCESS = '[Albums] Clicked album success',
     // SET_CLICKED_ALBUM_FAIL = '[Albums] Clicked album fail',
+    SET_PICKED_PHOTO = '[Photo] Set picked photo',
+    SET_PICKED_PHOTO_SUCCESS = '[Photo] Set picked photo successfully',
 
     DELETE_PHOTO = '[Photo] Delete photo',
     DELETE_PHOTO_SUCCESS = '[Photo] Delete photo successfully',
@@ -36,6 +38,15 @@ const enum Actions {
 
 }
 
+export const clearPhoto = createAction(
+    Actions.CLEAR_PICKED_PHOTO,
+
+)
+
+export const setPhoto = createAction(
+    Actions.SET_PICKED_PHOTO,
+    props<{ photo: Photo }>()
+)
 
 export const savePhoto = createAction(
     Actions.SAVE_PHOTO,
