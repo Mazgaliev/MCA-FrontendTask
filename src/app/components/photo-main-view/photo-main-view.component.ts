@@ -29,7 +29,7 @@ export class PhotoMainViewComponent implements OnInit, OnDestroy {
       subscribe(data => this.photo = data)
 
 
-
+    console.log("On init in Photo view called");
   }
 
   close(): void {
@@ -58,6 +58,6 @@ export class PhotoMainViewComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    // this.store.dispatch(AppActions.clearPhoto());
+    this.store.dispatch(AppActions.clearPhoto());
   }
 }

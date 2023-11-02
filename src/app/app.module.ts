@@ -17,14 +17,15 @@ import { HomeComponent } from './components/home/home.component';
 import { CreatePhotoComponent } from './components/photo-main-view/create-photo/create-photo.component';
 import { DeletePhotoComponent } from './components/photo-main-view/delete-photo/delete-photo.component';
 import { EditPhotoComponent } from './components/photo-main-view/edit-photo/edit-photo.component';
+import { PhotoMainViewComponent } from './components/photo-main-view/photo-main-view.component';
 import { ViewPhotosComponent } from './components/view-photos/view-photos.component';
 import { canActivateViewPhotoGuard } from './guards/view-photo.guard';
 import { LoadingComponentComponent } from './shared/components/loading-component/loading-component.component';
 import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
-import { albumResolve, photoResolve } from './shared/service/RouteResolver.service';
 import { AppEffects } from './store/effects';
 import { reducer } from './store/reducer';
-import { PhotoMainViewComponent } from './components/photo-main-view/photo-main-view.component';
+import { canLeaveViewPhotoGuard } from './guards/can-leave-view-photo.guard';
+
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -33,19 +34,15 @@ const routes: Routes = [
     path: "home", component: HomeComponent
   },
   {
-    path: "view",
+    path: "view/:albumId/photos",
+    component: ViewPhotosComponent,
     canActivate: [canActivateViewPhotoGuard],
-
-    children: [
-      {
-        path: ":albumId/photos", component: ViewPhotosComponent,
-        // resolve: { album: albumResolve }
-      }
-    ],
+    canDeactivate: [canLeaveViewPhotoGuard],
 
   },
   {
     path: ':photoId', component: PhotoMainViewComponent,
+    
     outlet: 'modal',
     //  resolve: { photo: photoResolve }
   },
@@ -80,7 +77,7 @@ const routes: Routes = [
     StoreDevtoolsModule.instrument({
       maxAge: 10
     }),
-    EffectsModule.forRoot([AppEffects])
+    EffectsModule.forRoot([AppEffects]),
 
   ],
   providers: [
