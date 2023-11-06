@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import { Subject, takeUntil } from 'rxjs';
@@ -11,7 +11,7 @@ import { EditPhotoComponent } from './edit-photo/edit-photo.component';
 @Component({
   selector: 'app-photo-main-view',
   templateUrl: './photo-main-view.component.html',
-  styleUrls: ['./photo-main-view.component.css']
+  styleUrls: ['./photo-main-view.component.scss']
 })
 export class PhotoMainViewComponent implements OnInit, OnDestroy {
 
@@ -28,8 +28,6 @@ export class PhotoMainViewComponent implements OnInit, OnDestroy {
       pipe(takeUntil(this.destroy$)).
       subscribe(data => this.photo = data)
 
-
-    console.log("On init in Photo view called");
   }
 
   close(): void {

@@ -1,4 +1,4 @@
-<div class="container">
+<!-- <div class="container">
     <div class="container" *ngIf="photo">
         <div class="row">
             <div class="col-3">
@@ -23,6 +23,30 @@
             <div class="col">
                 <i style="font-size: 50px;" class="material-icons" (click)="editModal()">edit</i>
                 <i style="font-size: 50px;" class="material-icons" (click)="deleteModal()">delete</i>
+            </div>
+        </div>
+    </div>
+</div> -->
+<div class="container" *ngIf="photo">
+    <div class="modal-popup">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 [innerText]="photo.title">
+                    Photo Title
+                </h2>
+                <span class="close"><i style="font-size: 50px;" class="material-icons"
+                        (click)="close()">cancel</i></span>
+            </div>
+            <div class="modal-body">
+                <img [src]="photo.url">
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col">
+                        <i style="font-size: 50px;" class="material-icons" (click)="editModal()">edit</i>
+                        <i style="font-size: 50px;" class="material-icons" (click)="deleteModal()">delete</i>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
