@@ -1,6 +1,7 @@
 import { Album } from "../model/Albums";
 import { Pagination } from "../model/Pagination";
 import { Photo } from "../model/Photo";
+import { PhotoPagination } from "../model/PhotoPagination";
 
 export interface AppState {
 
@@ -12,7 +13,10 @@ export interface AppState {
     index: number,
 
     pagination: Pagination,
+    photoPagination: PhotoPagination
 }
+
+
 
 export const initialState: AppState = {
     albumsState: [],
@@ -27,5 +31,14 @@ export const initialState: AppState = {
         firstPage: 1,
         lastPage: 1,
         currentPage: 1,
+    },
+    photoPagination: {
+
+        photos: [],
+        currentPage: 1,
+        lastPage: 1,
+        pageSize: 4,
+        start_idx: 1,
+        end_idx: 5,
     }
 }

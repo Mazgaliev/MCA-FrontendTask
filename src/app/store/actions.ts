@@ -39,7 +39,7 @@ const enum Actions {
     FETCH_ALL_PHOTOS = '[Photo] fetch all photos',
     FETCH_ALL_PHOTOS_SUCCESS = '[Photo] fetch all photo success',
 
-    //Pagination actions
+    //Pagination actions Album
     NEXT_PAGE = '[Pagination] go to next page',
     FIRST_PAGE = '[Pagination] go to first page',
     LAST_PAGE = '[Pagination] go to last page',
@@ -48,13 +48,72 @@ const enum Actions {
     LOAD_ALBUM_PAGE_SUCCESS = '[Pagination] load album page success',
     CHANGE_PAGE_SIZE = '[Pagination] change page size',
 
+
+    //Pagination actions Photo list
+    PHOTO_NEXT_PAGE = '[Photo Pagination] go to next page',
+    PHOTO_NEXT_PAGE_SUCC = '[Photo Pagination] go to next page success',
+    PHOTO_FIRST_PAGE = '[Photo Pagination] go to first page',
+    PHOTO_LAST_PAGE = '[Photo Pagination] go to last page',
+    PHOTO_LAST_PAGE_SUCCESS = '[Photo Pagination] go to last page success',
+
+    PHOTO_PREVIOUS_PAGE = '[Photo Pagination] go to previous page',
+    PHOTO_PREV_PAGE_SUCC = '[Photo Pagination] got to previous page success',
+    PHOTO_LOAD_ALBUM_PAGE = '[Photo Pagination] load album page',
+    PHOTO_LOAD_ALBUM_PAGE_SUCCESS = '[Photo Pagination] load album page success',
+    PHOTO_CHANGE_PAGE_SIZE = '[Photo Pagination] change page size',
+    PHOTO_CHANGE_PAGE_SIZE_SUCC = '[Photo Pagination] change page size success',
+    REFRESH_PHOTOS_PAGINATOR = '[Photo Pagination] refresh photo pagination'
+
 }
 
+export const refreshPhotosPaginator = createAction(
+    Actions.REFRESH_PHOTOS_PAGINATOR,
+)
+
+export const photoChangePageSizeSuccess = createAction(
+    Actions.PHOTO_CHANGE_PAGE_SIZE_SUCC,
+)
+
+export const photonextPageSuccess = createAction(
+    Actions.PHOTO_NEXT_PAGE_SUCC,
+
+)
+export const photoPreviousPageSuccess = createAction(
+    Actions.PHOTO_PREV_PAGE_SUCC,
+
+)
+export const photoLastPageSuccess = createAction(
+    Actions.PHOTO_LAST_PAGE_SUCCESS,
+)
+
+export const photoChangePageSize = createAction(
+    Actions.PHOTO_CHANGE_PAGE_SIZE,
+    props<{ newPageSize: number }>()
+)
+
+export const photoFirstPage = createAction(
+    Actions.PHOTO_FIRST_PAGE,
+)
+export const photoLastPage = createAction(
+    Actions.PHOTO_LAST_PAGE,
+)
+export const photoNextPage = createAction(
+    Actions.PHOTO_NEXT_PAGE
+
+)
+export const photoPreviousPage = createAction(
+    Actions.PHOTO_PREVIOUS_PAGE
+)
+
+
+export const setPickedAlbumSuccess = createAction(
+    Actions.SET_CLICKED_ALBUM_SUCCESS,
+)
 
 export const changePageSize = createAction(
     Actions.CHANGE_PAGE_SIZE,
-    props<{newPageSize:number}>()
-    )
+    props<{ newPageSize: number }>()
+)
 
 export const firstPage = createAction(
     Actions.FIRST_PAGE,

@@ -70,6 +70,14 @@ export class AppEffects {
         )
     )
 
+    pickedAlbum$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(AppActions.setClickedAlbum),
+            map(() => AppActions.setPickedAlbumSuccess())
+        )
+    )
+
+
     loadAlbums$ = createEffect(
         () => this.actions$.pipe(
             ofType(AppActions.loadAlbumPhotos),
@@ -110,6 +118,18 @@ export class AppEffects {
         )
     )
 
+    deletePhotoSuccess$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(AppActions.deletePhotoSuccess),
+            map(() => AppActions.refreshPhotosPaginator())
+        ))
+
+        editPhotosSuccess$ = createEffect(
+            () => this.actions$.pipe(
+                ofType(AppActions.editPhotoDataSuccess),
+                map(() => AppActions.refreshPhotosPaginator())
+            ))
+
     editPhoto$ = createEffect(
         () => this.actions$.pipe(
             ofType(AppActions.editPhotoData),
@@ -119,6 +139,33 @@ export class AppEffects {
                     return AppActions.editPhotoDataSuccess({ editedPhoto: result });
                 })
             ))
+        )
+    )
+
+    photoNextPageSucc$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(AppActions.photoNextPage),
+            map(() => AppActions.photonextPageSuccess())
+        )
+    )
+    photoPreviousPage$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(AppActions.photoPreviousPage),
+            map(() => AppActions.photoPreviousPageSuccess())
+        )
+    )
+
+    lastPagePhotoPagintor$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(AppActions.photoLastPage),
+            map(() => AppActions.photoLastPageSuccess())
+        )
+    )
+
+    changePage$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(AppActions.photoChangePageSize),
+            map(() => AppActions.photoChangePageSizeSuccess())
         )
     )
 }

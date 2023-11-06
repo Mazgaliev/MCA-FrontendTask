@@ -27,6 +27,7 @@ import { reducer } from './store/reducer';
 import { canLeaveViewPhotoGuard } from './guards/can-leave-view-photo.guard';
 import { PaginationComponentComponent } from './components/home/pagination-component/pagination-component.component';
 import { TrunctuateTitlesPipe } from './shared/pipes/trunctuate-titles.pipe';
+import { PhotoPaginatorComponent } from './components/view-photos/photo-paginator/photo-paginator.component';
 
 
 const routes: Routes = [
@@ -66,6 +67,7 @@ const routes: Routes = [
     PhotoMainViewComponent,
     PaginationComponentComponent,
     TrunctuateTitlesPipe,
+    PhotoPaginatorComponent,
   ],
   imports: [
     BrowserModule,

@@ -9,5 +9,4 @@ export interface Pagination {
     lastPage: number,
     firstPage: number
 
-
 }
