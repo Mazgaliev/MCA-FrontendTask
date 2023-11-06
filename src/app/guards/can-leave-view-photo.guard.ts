@@ -1,5 +1,5 @@
 import { inject } from "@angular/core";
-import { ActivatedRoute, CanDeactivateFn } from '@angular/router';
+import { CanDeactivateFn } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subject, takeUntil } from 'rxjs';
 import { ViewPhotosComponent } from '../components/view-photos/view-photos.component';
@@ -11,19 +11,17 @@ export const canLeaveViewPhotoGuard: CanDeactivateFn<ViewPhotosComponent> = (com
 
   inject(Store).select(Selectors.selectPickedPhoto)
     .pipe(takeUntil($destroy)).subscribe(data => {
-      console.log(data);
       photo = data
     });
 
-  // const photoId = inject(ActivatedRoute).snapshot.paramMap.get('photoId')
-  console.log( inject(ActivatedRoute).snapshot.paramMap);
-
-  if (photo != null) {
-    return false;
-  }
 
   $destroy.next();
   $destroy.complete();
+
+  if (photo != null) {
+    alert("You still have a selected photo");
+    return false;
+  }
 
   return true;
 };
