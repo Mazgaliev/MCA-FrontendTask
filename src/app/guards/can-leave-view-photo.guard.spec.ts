@@ -1,17 +1,16 @@
 import { TestBed } from '@angular/core/testing';
-import { CanDeactivateFn } from '@angular/router';
 
 import { canLeaveViewPhotoGuard } from './can-leave-view-photo.guard';
 
-describe('canLeaveViewPhotoGuard', () => {
-  const executeGuard: CanDeactivateFn = (...guardParameters) => 
-      TestBed.runInInjectionContext(() => canLeaveViewPhotoGuard(...guardParameters));
+describe('CanLeaveViewPhotoGuard', () => {
+  let guard = canLeaveViewPhotoGuard;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
+    guard = TestBed.inject(canLeaveViewPhotoGuard);
   });
 
   it('should be created', () => {
-    expect(executeGuard).toBeTruthy();
+    expect(guard).toBeTruthy();
   });
 });
