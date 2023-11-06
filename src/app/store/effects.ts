@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { EMPTY, catchError, exhaustMap, map, of, tap } from "rxjs";
+import { exhaustMap, map } from "rxjs";
 import { AppActions } from ".";
 import { Album } from "../model/Albums";
 import { HttpService } from "../shared/service/HttpService.service";
-import { Router } from "@angular/router";
 
 
 
@@ -13,7 +13,6 @@ export class AppEffects {
     constructor(private readonly httpService: HttpService,
         private readonly actions$: Actions,
         private readonly router: Router) { }
-
 
     fetchAlbums$ = createEffect(
         () => this.actions$.pipe(
@@ -33,13 +32,41 @@ export class AppEffects {
         )
     )
 
-    loadFirstAlbums$ = createEffect(
+
+
+
+    // loadFirstAlbums$ = createEffect(
+    //     () => this.actions$.pipe(
+    //         ofType(AppActions.fetchAlbumsSuccess),
+    //         map(() => {
+
+    //             return AppActions.loadAlbumPhotos({ albumId: 1 });
+    //         })
+    //     )
+    // )
+
+
+    loadAllPhotos$ = createEffect(
         () => this.actions$.pipe(
             ofType(AppActions.fetchAlbumsSuccess),
-            map(() => {
+            map(() => AppActions.fetchAllPhotos())
+        )
+    )
 
-                return AppActions.loadAlbumPhotos({ albumId: 1 });
-            })
+    loadAllphotoSucc$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(AppActions.fetchAllPhotos),
+            exhaustMap(() => this.httpService.getAllPhotos().pipe(
+                map(data =>
+                    AppActions.fetchAllPhotosSuccess({ photos: data }))
+            ))
+        )
+    )
+
+    goToFirstPage$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(AppActions.fetchAllPhotosSuccess),
+            map(() => AppActions.firstPage())
         )
     )
 
@@ -87,7 +114,10 @@ export class AppEffects {
         () => this.actions$.pipe(
             ofType(AppActions.editPhotoData),
             exhaustMap((data) => this.httpService.editPhoto(data.editedPhoto).pipe(
-                map(result => AppActions.editPhotoDataSuccess({ editedPhoto: result }))
+                map(result => {
+                    this.router.navigate([{ outlets: { modal: null } }]);
+                    return AppActions.editPhotoDataSuccess({ editedPhoto: result });
+                })
             ))
         )
     )

@@ -1,10 +1,16 @@
-<div class="container">
+<div class="container" *ngIf="($paginator|async)">
+    <app-pagination-component [paginator]="($paginator|async)!"
+        (paginationNavigationEventEmitter)="changePage($event)"
+        (clickedAlbumEmitter)="setSelectedAlbum($event)"
+        (pageSizeChangeEmitter)="changePageSize($event)"></app-pagination-component>
+</div>
+<!-- <div class="container">
     <div class="row" *ngFor="let a of ($albums|async)">
         <div class="col"></div>
         <div class="col">
             <div style="align-items: center;" class="container text-center">
                 <app-album [album]="a" (selectedAlbumEmitter)="setSelectedAlbum($event)"></app-album>
-                <!-- <h4 [innerText]="a.title"></h4> -->
+                <h4 [innerText]="a.title"></h4>
             </div>
         </div>
         <div class="col"></div>
@@ -22,4 +28,4 @@
             <div class="col"></div>
         </div>
     </div>
-</div>
+</div> -->

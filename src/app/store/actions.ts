@@ -34,10 +34,59 @@ const enum Actions {
     EDIT_PHOTO_DATA_FAIL = '[Photo] Edit photo data failed',
 
     SAVE_PHOTO = '[Photo] Save photo',
-    SAVE_PHOTO_SUCCESS = '[Photo] Save photo successfully'
+    SAVE_PHOTO_SUCCESS = '[Photo] Save photo successfully',
+
+    FETCH_ALL_PHOTOS = '[Photo] fetch all photos',
+    FETCH_ALL_PHOTOS_SUCCESS = '[Photo] fetch all photo success',
+
+    //Pagination actions
+    NEXT_PAGE = '[Pagination] go to next page',
+    FIRST_PAGE = '[Pagination] go to first page',
+    LAST_PAGE = '[Pagination] go to last page',
+    PREVIOUS_PAGE = '[Pagination] go to previous page',
+    LOAD_ALBUM_PAGE = '[Pagination] load album page',
+    LOAD_ALBUM_PAGE_SUCCESS = '[Pagination] load album page success',
+    CHANGE_PAGE_SIZE = '[Pagination] change page size',
 
 }
 
+
+export const changePageSize = createAction(
+    Actions.CHANGE_PAGE_SIZE,
+    props<{newPageSize:number}>()
+    )
+
+export const firstPage = createAction(
+    Actions.FIRST_PAGE,
+)
+export const lastPage = createAction(
+    Actions.LAST_PAGE,
+)
+export const nextPage = createAction(
+    Actions.NEXT_PAGE
+
+)
+export const previousPage = createAction(
+    Actions.PREVIOUS_PAGE
+)
+
+
+export const fetchAllPhotos = createAction(
+    Actions.FETCH_ALL_PHOTOS,
+)
+export const fetchAllPhotosSuccess = createAction(
+    Actions.FETCH_ALL_PHOTOS_SUCCESS,
+    props<{ photos: Photo[] }>()
+)
+export const loadAlbumPage = createAction(
+    Actions.LOAD_ALBUM_PAGE,
+    props<{ albums: Album[] }>()
+)
+
+export const loadAlbumPageSuccess = createAction(
+    Actions.LOAD_ALBUM_PAGE_SUCCESS,
+    props<{ albums: Album[] }>()
+)
 export const clearPhoto = createAction(
     Actions.CLEAR_PICKED_PHOTO,
 

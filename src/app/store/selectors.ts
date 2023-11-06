@@ -31,3 +31,7 @@ export const selectPickedPhoto = createSelector(
     selectAppState,
     (state: AppState) => state.pickedPhoto
 )
+export const selectpaginator = createSelector(
+    selectAppState,
+    (state: AppState) => state.pagination
+)

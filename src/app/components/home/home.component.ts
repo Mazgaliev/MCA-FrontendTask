@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Subject } from 'rxjs';
 import { Album } from 'src/app/model/Albums';
 import { LoadAlbumsService } from 'src/app/shared/service/LoadAlbums.service';
 import { AppActions, Selectors } from 'src/app/store';
@@ -16,17 +15,36 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   $albums = this.store.select(Selectors.selectLoadedAlbums);
   $isLoading = this.store.select(Selectors.selectLoading);
+  $paginator = this.store.select(Selectors.selectpaginator);
 
-  constructor(private readonly store: Store, private readonly router: Router, private readonly loadAlbumService: LoadAlbumsService) { }
+  constructor(private readonly store: Store, private readonly router: Router,
+    private readonly loadAlbumService: LoadAlbumsService
+  ) { }
 
   ngOnInit(): void {
 
+
     this.store.dispatch(AppActions.fetchAlbums());
 
-    this.loadAlbumService.loadMoreAlbums(1);
   }
 
+  changePage(event: number): void {
 
+    if (event == 0) {
+      this.store.dispatch(AppActions.firstPage())
+
+    } else if (event == 1) {
+      this.store.dispatch(AppActions.previousPage())
+    } else if (event == 2) {
+      this.store.dispatch(AppActions.nextPage())
+    } else {
+      this.store.dispatch(AppActions.lastPage())
+    }
+  }
+
+  changePageSize(event: number): void {
+    this.store.dispatch(AppActions.changePageSize({ newPageSize: event }))
+  }
 
   loadMore(): void {
 
