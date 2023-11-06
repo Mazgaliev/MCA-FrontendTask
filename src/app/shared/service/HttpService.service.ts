@@ -1,6 +1,6 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 import { Album } from "src/app/model/Albums";
 import { Photo } from "../../model/Photo";
 import { CreatePhoto } from "src/app/model/CreatePhoto";
@@ -12,6 +12,7 @@ export class HttpService {
     constructor(private readonly httpClient: HttpClient) {
 
     }
+
 
     getAlbums(): Observable<Album[]> {
         return this.httpClient.get<Album[]>(this.api + 'albums')
@@ -31,6 +32,11 @@ export class HttpService {
 
     deletePhoto(photoId: number): Observable<{}> {
         return this.httpClient.delete<{}>(this.api + 'photos/' + photoId);
+    }
+
+    getAllPhotos(): Observable<Photo[]> {
+
+        return this.httpClient.get<Photo[]>(this.api + 'photos');
     }
 
     editPhoto(photo: Photo): Observable<Photo> {

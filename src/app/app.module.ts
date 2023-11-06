@@ -25,6 +25,8 @@ import { PageNotFoundComponent } from './shared/components/page-not-found/page-n
 import { AppEffects } from './store/effects';
 import { reducer } from './store/reducer';
 import { canLeaveViewPhotoGuard } from './guards/can-leave-view-photo.guard';
+import { PaginationComponentComponent } from './components/home/pagination-component/pagination-component.component';
+import { TrunctuateTitlesPipe } from './shared/pipes/trunctuate-titles.pipe';
 
 
 const routes: Routes = [
@@ -62,6 +64,8 @@ const routes: Routes = [
     CreatePhotoComponent,
     PageNotFoundComponent,
     PhotoMainViewComponent,
+    PaginationComponentComponent,
+    TrunctuateTitlesPipe,
   ],
   imports: [
     BrowserModule,
