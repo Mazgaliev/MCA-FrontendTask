@@ -105,6 +105,14 @@ export class AppEffects {
         )
     )
 
+    savePhotoSuccess$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(AppActions.savePhotoSuccess),
+            map(() => AppActions.refreshPhotosPaginator())
+        )
+    )
+
+    
     deletePhoto$ = createEffect(
         () => this.actions$.pipe(
             ofType(AppActions.deletePhoto),
@@ -124,11 +132,11 @@ export class AppEffects {
             map(() => AppActions.refreshPhotosPaginator())
         ))
 
-        editPhotosSuccess$ = createEffect(
-            () => this.actions$.pipe(
-                ofType(AppActions.editPhotoDataSuccess),
-                map(() => AppActions.refreshPhotosPaginator())
-            ))
+    editPhotosSuccess$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(AppActions.editPhotoDataSuccess),
+            map(() => AppActions.refreshPhotosPaginator())
+        ))
 
     editPhoto$ = createEffect(
         () => this.actions$.pipe(
