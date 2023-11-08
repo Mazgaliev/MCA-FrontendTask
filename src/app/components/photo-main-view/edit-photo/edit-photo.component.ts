@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Subject, takeUntil } from 'rxjs';
 import { Photo } from 'src/app/model/Photo';
 
 @Component({
@@ -8,28 +9,41 @@ import { Photo } from 'src/app/model/Photo';
   templateUrl: './edit-photo.component.html',
   styleUrls: ['./edit-photo.component.css']
 })
-export class EditPhotoComponent {
+export class EditPhotoComponent implements OnInit, OnDestroy {
+
+  photo: Photo | undefined = undefined;
+  destroy$ = new Subject<void>;
+
+  titleLengthWarning: boolean = false;
+
+  editPictureForm: FormGroup = new FormGroup({});
 
   constructor(public activeModal: NgbActiveModal, private formBuilder: FormBuilder) {
 
   }
 
+  ngOnInit(): void {
 
-  photo: Photo | undefined = undefined;
+    this.editPictureForm = this.formBuilder.group({
+      title: [this.photo?.title, [Validators.required, Validators.maxLength(50)]],
+      url: [this.photo?.url, Validators.required],
+      thumbnailUrl: [this.photo?.thumbnailUrl, Validators.required]
+    });
 
+    this.editPictureForm.get('title')!.valueChanges.
+      pipe(takeUntil(this.destroy$)).
+      subscribe(data => {
+        this.titleLengthWarning = data!.length > 50 ? true : false;
+      })
+  }
 
-  editPictureForm = this.formBuilder.group({
-    title: [this.photo?.title, Validators.required],
-    url: [this.photo?.url, Validators.required],
-    thumbnailUrl: [this.photo?.thumbnailUrl, Validators.required]
-  })
 
 
   editPhoto(): void {
     const formValue = this.editPictureForm.value;
     if (formValue.url == this.photo?.url && formValue.title == this.photo?.title && formValue.thumbnailUrl == this.photo?.thumbnailUrl) {
       this.activeModal.close(false);
-      throw ("Invalid form sent");
+
     } else {
 
       const editedPhoto: Photo = {
@@ -47,4 +61,13 @@ export class EditPhotoComponent {
   close() {
     this.activeModal.close(false);
   }
+
+
+  ngOnDestroy(): void {
+
+
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
 }

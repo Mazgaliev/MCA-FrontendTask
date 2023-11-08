@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -7,16 +7,24 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './create-photo.component.html',
   styleUrls: ['./create-photo.component.css']
 })
-export class CreatePhotoComponent {
+export class CreatePhotoComponent implements OnInit {
+  createPhotoForm: FormGroup = new FormGroup({});
+
+  titleWarning: boolean = false;
 
   constructor(private readonly activeModal: NgbActiveModal, private formBuilder: FormBuilder) { }
+  ngOnInit(): void {
+    this.createPhotoForm = this.formBuilder.group({
+      title: ['', [Validators.required, Validators.maxLength(50)]],
+      url: ['', Validators.required],
+      thumbnailUrl: ['', Validators.required]
+    });
 
-  createPhotoForm = this.formBuilder.group({
-    title: ['', Validators.required],
-    url: ['', Validators.required],
-    thumbnailUrl: ['', Validators.required]
-  });
-
+    this.createPhotoForm.valueChanges.pipe().subscribe(
+      data => data.length > 50 ? this.titleWarning = true : false
+    )
+    console.log(this.createPhotoForm);
+  }
 
 
   createPhoto(): void {
