@@ -1,31 +1,5 @@
 <div class="container" *ngIf="($paginator|async)">
-    <app-pagination-component [paginator]="($paginator|async)!"
-        (paginationNavigationEventEmitter)="changePage($event)"
-        (clickedAlbumEmitter)="setSelectedAlbum($event)"
-        (pageSizeChangeEmitter)="changePageSize($event)"></app-pagination-component>
+    <app-pagination-component [paginator]="($paginator|async)!" (paginationNavigationEventEmitter)="changePage($event)"
+        (clickedAlbumEmitter)="setSelectedAlbum($event)" (pageSizeChangeEmitter)="changePageSize($event)"
+        (changeOrderEmitter)="changeAlbumsOrder($event)"></app-pagination-component>
 </div>
-<!-- <div class="container">
-    <div class="row" *ngFor="let a of ($albums|async)">
-        <div class="col"></div>
-        <div class="col">
-            <div style="align-items: center;" class="container text-center">
-                <app-album [album]="a" (selectedAlbumEmitter)="setSelectedAlbum($event)"></app-album>
-                <h4 [innerText]="a.title"></h4>
-            </div>
-        </div>
-        <div class="col"></div>
-    </div>
-    <div style="padding-top: 50px;" *ngIf="($isLoading|async)" class="row text-center">
-        <app-loading-component></app-loading-component>
-    </div>
-
-    <div class="container">
-        <div style="padding-top: 30px;" class="row">
-            <div class="col-4"></div>
-            <div class="col">
-                <button class="btn btn-primary" (click)="loadMore()">Load More Albums</button>
-            </div>
-            <div class="col"></div>
-        </div>
-    </div>
-</div> -->

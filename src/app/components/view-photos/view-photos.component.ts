@@ -38,6 +38,12 @@ export class ViewPhotosComponent implements OnDestroy, OnInit {
   }
 
 
+  changePhotosOrder(ascending: boolean): void {
+
+    this.store.dispatch(AppActions.changePhotoPaginatorOrder());
+  }
+
+
   openCreatePhotoModal(): void {
     const modalRef = this.modalService.open(CreatePhotoComponent);
 

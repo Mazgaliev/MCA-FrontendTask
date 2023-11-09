@@ -28,6 +28,12 @@
             </b>
         </div>
         <div class="col"></div>
+        <div class="col-1">
+            <button class="btn btn-primary" [innerText]="paginator.ascending?'Descending':'Ascending'"
+                (click)="changePhotosOrder()"></button>
+        </div>
+        <div class="col-1">
+        </div>
 
         <div class="col-2 text-center">
 

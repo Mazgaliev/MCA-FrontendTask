@@ -26,17 +26,26 @@
             </b>
         </div>
         <div class="col"></div>
+        <div class="col-1">
+            <button class="btn btn-primary" [innerText]="paginator.ascending?'Descending':'Ascending'"
+                (click)="changeOrder()"></button>
+        </div>
+        <div class="col-1">
+        </div>
 
         <div class="col-2 text-center">
 
-            <select style="background-color: #e5eaf5;" class="form-select form-select-lg" #pSize (change)="pageSizeChange(+pSize.value)">
+            <select style="background-color: #e5eaf5;" class="form-select form-select-lg" #pSize
+                (change)="pageSizeChange(+pSize.value)">
                 <option value="2" selected>2</option>
                 <option value="4">4</option>
                 <option value="8">8</option>
             </select>
 
         </div>
-        <div class="col-1"></div>
+        <div class="col-1">
+
+        </div>
         <div style=" align-items: end;" class="col-1 text-end" (click)="nextPage()">
             <i class="material-icons">arrow_forward_ios</i>
         </div>

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { Subject, takeUntil } from 'rxjs';
 import { Album } from 'src/app/model/Albums';
 import { LoadAlbumsService } from 'src/app/shared/service/LoadAlbums.service';
 import { AppActions, Selectors } from 'src/app/store';
@@ -16,15 +17,20 @@ export class HomeComponent implements OnInit, OnDestroy {
   $albums = this.store.select(Selectors.selectLoadedAlbums);
   $isLoading = this.store.select(Selectors.selectLoading);
   $paginator = this.store.select(Selectors.selectpaginator);
+  $destroy: Subject<void> = new Subject<void>();
+  ascending: boolean = true;
 
   constructor(private readonly store: Store, private readonly router: Router,
     private readonly loadAlbumService: LoadAlbumsService
   ) { }
 
   ngOnInit(): void {
+    this.store.select(Selectors.selectAlbumAscending).
+      pipe(takeUntil(this.$destroy)).
+      subscribe(data => this.ascending = data);
 
 
-    this.store.dispatch(AppActions.fetchAlbums());
+    this.store.dispatch(AppActions.fetchAlbums({ ascendingData: this.ascending }));
 
   }
 
@@ -62,6 +68,11 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.router.navigate(["view", album.id, 'photos']);
     }
 
+  }
+
+  changeAlbumsOrder(newOrder: boolean): void {
+
+    this.store.dispatch(AppActions.changeAlbumPaginatorOrder());
   }
 
   ngOnDestroy(): void {

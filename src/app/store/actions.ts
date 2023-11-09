@@ -41,9 +41,13 @@ const enum Actions {
 
     //Pagination actions Album
     NEXT_PAGE = '[Pagination] go to next page',
+    NEXT_PAGE_SUCCESS = '[Pagination] go to next page successfully',
     FIRST_PAGE = '[Pagination] go to first page',
+    FIRST_PAGE_SUCCESS = '[Pagination] go to first page successfully',
     LAST_PAGE = '[Pagination] go to last page',
+    LAST_PAGE_SUCCESS = '[Pagination] go to last page successfully',
     PREVIOUS_PAGE = '[Pagination] go to previous page',
+    PREVIOUS_PAGE_SUCCESS = '[Pagination] go to last page successfully',
     LOAD_ALBUM_PAGE = '[Pagination] load album page',
     LOAD_ALBUM_PAGE_SUCCESS = '[Pagination] load album page success',
     CHANGE_PAGE_SIZE = '[Pagination] change page size',
@@ -62,9 +66,38 @@ const enum Actions {
     PHOTO_LOAD_ALBUM_PAGE_SUCCESS = '[Photo Pagination] load album page success',
     PHOTO_CHANGE_PAGE_SIZE = '[Photo Pagination] change page size',
     PHOTO_CHANGE_PAGE_SIZE_SUCC = '[Photo Pagination] change page size success',
-    REFRESH_PHOTOS_PAGINATOR = '[Photo Pagination] refresh photo pagination'
+    REFRESH_PHOTOS_PAGINATOR = '[Photo Pagination] refresh photo pagination',
+    REFRESH_ALBUM_PAGINATOR = '[Paginator] refresh album paginator',
+
+    CHANGE_ALBUM_PAGINATOR_ORDER = '[Pagination] change order of the pagination',
+    CHANGE_PHOTO_PAGINATOR_ORDER = '[Photo Pagination] change order of the pagination',
 
 }
+
+
+export const previousPageSuccess = createAction(
+    Actions.PREVIOUS_PAGE_SUCCESS,
+)
+export const nextPageSuccess = createAction(
+    Actions.NEXT_PAGE_SUCCESS,
+)
+export const lastPageSuccess= createAction(
+    Actions.LAST_PAGE_SUCCESS
+)
+export const firstPageSuccess= createAction(
+    Actions.FIRST_PAGE_SUCCESS
+)
+
+export const refreshAlbumPaginator = createAction(
+    Actions.REFRESH_ALBUM_PAGINATOR,
+)
+
+export const changePhotoPaginatorOrder = createAction(
+    Actions.CHANGE_PHOTO_PAGINATOR_ORDER,
+)
+export const changeAlbumPaginatorOrder = createAction(
+    Actions.CHANGE_ALBUM_PAGINATOR_ORDER,
+)
 
 export const refreshPhotosPaginator = createAction(
     Actions.REFRESH_PHOTOS_PAGINATOR,
@@ -207,6 +240,7 @@ export const setClickedAlbumFail = createAction(
 )
 export const fetchAlbums = createAction(
     Actions.FETCH_ALBUMS,
+    props<{ ascendingData: boolean }>()
 )
 export const fetchAlbumsSuccess = createAction(
     Actions.FETCH_ALBUMS_SUCCESS,

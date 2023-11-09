@@ -14,6 +14,7 @@ export class PhotoPaginatorComponent {
   @Output() pageNavigationEmitter: EventEmitter<number> = new EventEmitter<number>();
   @Output() pageSizeChangeEmitter: EventEmitter<number> = new EventEmitter<number>();
   @Output() photoSelectedEmitter: EventEmitter<Photo> = new EventEmitter<Photo>();
+  @Output() orderChangeEventEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   firstPage(): void {
     this.pageNavigationEmitter.emit(0)
@@ -34,5 +35,9 @@ export class PhotoPaginatorComponent {
 
   setPhoto(photo: Photo): void {
     this.photoSelectedEmitter.emit(photo)
+  }
+
+  changePhotosOrder(): void {
+    this.orderChangeEventEmitter.emit(!this.paginator!.ascending);
   }
 }

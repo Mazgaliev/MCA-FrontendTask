@@ -5,6 +5,7 @@ import { exhaustMap, map } from "rxjs";
 import { AppActions } from ".";
 import { Album } from "../model/Albums";
 import { HttpService } from "../shared/service/HttpService.service";
+import { compare } from "./reducer";
 
 
 
@@ -17,7 +18,7 @@ export class AppEffects {
     fetchAlbums$ = createEffect(
         () => this.actions$.pipe(
             ofType(AppActions.fetchAlbums),
-            exhaustMap(() =>
+            exhaustMap(data =>
                 this.httpService.getAlbums().pipe(
                     map(albums => {
                         var albs: Album[] = []
@@ -26,6 +27,7 @@ export class AppEffects {
                             albs.push(a);
 
                         }
+                        albs = albs.sort((a, b) => compare(a, b, data.ascendingData))
                         return AppActions.fetchAlbumsSuccess({ albums: albs })
                     })
                 ))
@@ -33,17 +35,19 @@ export class AppEffects {
     )
 
 
+    changeAlbumPaginatorORder$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(AppActions.changeAlbumPaginatorOrder),
+            map(() => AppActions.refreshAlbumPaginator())
+        )
+    )
 
-
-    // loadFirstAlbums$ = createEffect(
-    //     () => this.actions$.pipe(
-    //         ofType(AppActions.fetchAlbumsSuccess),
-    //         map(() => {
-
-    //             return AppActions.loadAlbumPhotos({ albumId: 1 });
-    //         })
-    //     )
-    // )
+    changePhotoPaginatorOrder$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(AppActions.changePhotoPaginatorOrder),
+            map(() => AppActions.refreshPhotosPaginator())
+        )
+    )
 
 
     loadAllPhotos$ = createEffect(
@@ -91,6 +95,25 @@ export class AppEffects {
         )
     )
 
+    nextAlbumsPage$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(AppActions.nextPage),
+            map(() => AppActions.nextPageSuccess())
+        )
+    )
+    previousAlbumsPage$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(AppActions.previousPage),
+            map(() => AppActions.previousPageSuccess())
+        )
+    )
+    lastAlbumsPageSuccess = createEffect(
+        () => this.actions$.pipe(
+            ofType(AppActions.lastPage),
+            map(() => AppActions.lastPageSuccess())
+        )
+    )
+
 
 
     savePhoto$ = createEffect(
@@ -112,7 +135,7 @@ export class AppEffects {
         )
     )
 
-    
+
     deletePhoto$ = createEffect(
         () => this.actions$.pipe(
             ofType(AppActions.deletePhoto),

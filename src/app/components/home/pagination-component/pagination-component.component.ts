@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Album } from 'src/app/model/Albums';
-import { Pagination } from 'src/app/model/Pagination';
+import { AlbumPagination } from 'src/app/model/Pagination';
 
 @Component({
   selector: 'app-pagination-component',
@@ -8,11 +8,12 @@ import { Pagination } from 'src/app/model/Pagination';
   styleUrls: ['./pagination-component.component.css']
 })
 export class PaginationComponentComponent {
-  @Input() paginator: Pagination | undefined;
+  @Input() paginator: AlbumPagination | undefined;
 
   @Output() paginationNavigationEventEmitter: EventEmitter<number> = new EventEmitter<number>();
   @Output() clickedAlbumEmitter: EventEmitter<Album> = new EventEmitter<Album>();
   @Output() pageSizeChangeEmitter: EventEmitter<number> = new EventEmitter<number>();
+  @Output() changeOrderEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   clickedAlbum(event: Album) {
     this.clickedAlbumEmitter.emit(event);
@@ -33,5 +34,8 @@ export class PaginationComponentComponent {
 
   pageSizeChange(pageSize: number): void {
     this.pageSizeChangeEmitter.emit(pageSize);
+  }
+  changeOrder(): void {
+    this.changeOrderEmitter.emit(!this.paginator!.ascending);
   }
 }

@@ -12,10 +12,9 @@
             <h2 [innerText]="'Album '+ selectedAlbum.id"></h2>
         </div>
     </div>
-    <app-photo-paginator [paginator]="(selectedPaginator$|async)!"
-     (pageSizeChangeEmitter)="changePageSize($event)"
-        (pageNavigationEmitter)="changePage($event)"
-        (photoSelectedEmitter)="openPhotoViewModal($event)"></app-photo-paginator>
+    <app-photo-paginator [paginator]="(selectedPaginator$|async)!" (pageSizeChangeEmitter)="changePageSize($event)"
+        (pageNavigationEmitter)="changePage($event)" (photoSelectedEmitter)="openPhotoViewModal($event)"
+        (orderChangeEventEmitter)="changePhotosOrder($event)"></app-photo-paginator>
 
 </div>
 

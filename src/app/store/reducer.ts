@@ -1,7 +1,28 @@
 import { createReducer, on } from "@ngrx/store";
-import { changePageSize, clearLoadedAlbum, clearPickedAlbum, clearPickedPhoto, deletePhoto, deletePhotoSuccess, editPhotoData, editPhotoDataSuccess, fetchAlbums, fetchAlbumsSuccess, fetchAllPhotosSuccess, firstPage, lastPage, loadAlbumPageSuccess, loadAlbumPhotos, loadAlbumPhotosSuccess, nextPage, photoChangePageSize, photoChangePageSizeSuccess, photoFirstPage, photoLastPage, photoLastPageSuccess, photoNextPage, photoPreviousPage, photoPreviousPageSuccess, photonextPageSuccess, previousPage, refreshPhotosPaginator, savePhotoSuccess, setClickedAlbum, setPhoto, setPickedAlbumSuccess } from "./actions";
+import { Album } from "../model/Albums";
+import { Photo } from "../model/Photo";
+import { changeAlbumPaginatorOrder, changePageSize, changePhotoPaginatorOrder, clearLoadedAlbum, clearPickedAlbum, clearPickedPhoto, deletePhoto, deletePhotoSuccess, editPhotoData, editPhotoDataSuccess, fetchAlbums, fetchAlbumsSuccess, fetchAllPhotosSuccess, firstPage, lastPage, lastPageSuccess, loadAlbumPageSuccess, loadAlbumPhotos, loadAlbumPhotosSuccess, nextPage, nextPageSuccess, photoChangePageSize, photoChangePageSizeSuccess, photoFirstPage, photoLastPage, photoLastPageSuccess, photoNextPage, photoPreviousPage, photoPreviousPageSuccess, photonextPageSuccess, previousPage, previousPageSuccess, refreshAlbumPaginator, refreshPhotosPaginator, savePhotoSuccess, setClickedAlbum, setPhoto, setPickedAlbumSuccess } from "./actions";
 import { initialState } from "./state";
 
+
+// export const paginationReducer= createReducer
+export function compare<T extends Album | Photo>(item1: T, item2: T, ascending: boolean): any {
+    if (ascending) {
+        return item1.id < item2.id ? -1 : 1;
+    } else if (!ascending) {
+        return item1.id > item2.id ? -1 : 1;
+    }
+
+    return null
+}
+
+function checkNextPage(currentPage: number, lastPage: number): boolean {
+    //returns true if we can switch to next page
+    return (currentPage + 1 <= lastPage);
+}
+function checkPreviousPage(currentPage: number, lastPage: number): boolean {
+    return (currentPage - 1 >= 1);
+}
 
 export const reducer = createReducer(
     initialState,
@@ -22,7 +43,6 @@ export const reducer = createReducer(
     on(loadAlbumPhotosSuccess, (state, { photos, albumId }) => ({
         ...state,
         albumsState: state.albumsState.map((val, index) => val.id == albumId ? { ...val, photos: photos } : val),
-        loadedAlbums: [...state.loadedAlbums, ...state.albumsState.filter((album) => album.id == albumId).map((val, index) => val.id == albumId ? { ...val, photos: photos } : val)],
         loading: false
 
     })),
@@ -124,52 +144,76 @@ export const reducer = createReducer(
         pagination: {
             ...state.pagination,
             currentPage: 1,
-            albums: state.albumsState.filter(album => (album.id >= 1 && album.id < 1 + state.pagination.pageSize))
+            start_idx: 1,
+            end_idx: 1 + state.pagination.pageSize,
+            albums: state.albumsState.slice(0, state.pagination.pageSize)
         },
-        index: 1 + state.pagination.pageSize
     })),
     on(nextPage, (state) => ({
         ...state,
         pagination: {
             ...state.pagination,
-            currentPage: state.pagination.currentPage + 1 > state.pagination.lastPage ? state.pagination.currentPage : state.pagination.currentPage + 1,
-            albums: state.pagination.currentPage + 1 > state.pagination.lastPage ?
-                state.pagination.albums :
-                state.albumsState.
-                    filter(album => (album.id >= state.index && album.id < state.index + state.pagination.pageSize))
+            start_idx: checkNextPage(state.pagination.currentPage, state.pagination.lastPage) ? state.pagination.start_idx + state.pagination.pageSize : state.pagination.start_idx,
+            end_idx: checkNextPage(state.pagination.currentPage, state.pagination.lastPage) ? state.pagination.end_idx + state.pagination.pageSize : state.pagination.end_idx,
+            currentPage: checkNextPage(state.pagination.currentPage, state.pagination.lastPage) ? state.pagination.currentPage + 1 : state.pagination.currentPage
+            // albums: state.pagination.currentPage + 1 > state.pagination.lastPage ?
+            //     state.pagination.albums :
+            //     state.albumsState.slice(state.index - 1, state.index + state.pagination.pageSize - 1)
+            // filter(album => (album.id >= state.index && album.id < state.index + state.pagination.pageSize))
         },
-        index: state.pagination.currentPage == state.pagination.lastPage ? state.index : state.index + state.pagination.pageSize
+    })),
+    on(nextPageSuccess, (state) => ({
+        ...state,
+        pagination: {
+            ...state.pagination,
+            albums: state.albumsState.slice(state.pagination.start_idx - 1, state.pagination.end_idx - 1)
+        }
     })),
     on(previousPage, (state) => ({
         ...state,
         pagination: {
             ...state.pagination,
-            currentPage: state.pagination.currentPage - 1 == 0 ? state.pagination.currentPage : state.pagination.currentPage - 1,
-            albums: state.pagination.currentPage - 1 == 1 ? state.pagination.albums :
-                state.albumsState.
-                    filter(album => (album.id >= state.index - state.pagination.pageSize && album.id < state.index))
+            start_idx: checkPreviousPage(state.pagination.currentPage, state.pagination.lastPage) ? state.pagination.start_idx - state.pagination.pageSize : state.pagination.start_idx,
+            end_idx: checkPreviousPage(state.pagination.currentPage, state.pagination.lastPage) ? state.pagination.end_idx - state.pagination.pageSize : state.pagination.end_idx,
+            currentPage: checkPreviousPage(state.pagination.currentPage, state.pagination.lastPage) ? state.pagination.currentPage - 1 : state.pagination.currentPage,
         },
-        index: state.pagination.currentPage == 1 ? state.index : state.index - state.pagination.pageSize
+    })),
+    on(previousPageSuccess, (state) => ({
+        ...state,
+        pagination: {
+            ...state.pagination,
+            albums: state.albumsState.slice(state.pagination.start_idx, state.pagination.end_idx)
+        }
     })),
     on(lastPage, (state) => ({
         ...state,
         pagination: {
             ...state.pagination,
             currentPage: state.pagination.lastPage,
-            albums: state.albumsState.
-                filter(album => (album.id <= state.pagination.lastPage * state.pagination.pageSize && album.id > (state.pagination.lastPage - 1) * (state.pagination.pageSize)))
+            start_idx: (state.pagination.lastPage - 1) * state.pagination.pageSize,
+            end_idx: (state.pagination.pageSize * state.pagination.lastPage),
+            // albums: state.albumsState.
+            //     filter(album => (album.id <= state.pagination.lastPage * state.pagination.pageSize && album.id > (state.pagination.lastPage - 1) * (state.pagination.pageSize)))
         },
-        index: state.pagination.lastPage * state.pagination.pageSize
 
+    })),
+    on(lastPageSuccess, (state) => ({
+        ...state,
+        pagination: {
+            ...state.pagination,
+            albums: state.albumsState.slice(state.pagination.start_idx, state.pagination.end_idx)
+        }
     })),
     on(changePageSize, (state, { newPageSize }) => ({
         ...state,
         pagination: {
             ...state.pagination,
             pageSize: newPageSize,
+            end_idx: state.pagination.start_idx + newPageSize,
             lastPage: Math.round(state.albumsState.length / newPageSize),
+            currentPage: Math.ceil(state.pagination.start_idx / newPageSize),
             albums: state.albumsState.
-                filter(album => (album.id <= state.pagination.currentPage * newPageSize && album.id >= state.pagination.currentPage))
+                slice(state.pagination.start_idx - 1, state.pagination.start_idx + newPageSize - 1)
 
         }
     })),
@@ -261,5 +305,46 @@ export const reducer = createReducer(
             photos: state.pickedAlbum!.photos.slice(state.photoPagination.start_idx - 1, state.photoPagination.end_idx - 1),
             lastPage: Math.ceil(state.pickedAlbum!.photos.length / state.photoPagination.pageSize)
         }
+    })),
+    on(changeAlbumPaginatorOrder, (state) => {
+        const sortedAlbs = [...state.albumsState].sort((a, b) => compare(a, b, !state.pagination.ascending));
+
+        return {
+            ...state,
+            albumsState: sortedAlbs,
+            pagination: { ...state.pagination, ascending: !state.pagination.ascending }
+        }
+    }),
+    on(changePhotoPaginatorOrder, (state) => {
+
+        if (state.pickedAlbum && state.photoPagination) {
+            const sortedPhotos = [...state.pickedAlbum!.photos].sort((a, b) => compare(a, b, !state.photoPagination.ascending))
+            const pickedAlbum = { ...state.pickedAlbum, photos: sortedPhotos }
+
+            return {
+                ...state,
+
+                pickedAlbum: pickedAlbum,
+                photoPagination: {
+                    ...state.photoPagination,
+                    ascending: !state.photoPagination.ascending
+                }
+            }
+        }
+
+        return {
+            ...state
+
+        }
+    }),
+    on(refreshAlbumPaginator, (state) => ({
+        ...state,
+        pagination: {
+            ...state.pagination,
+            albums: state.albumsState
+                .slice(state.pagination.start_idx - 1, state.pagination.end_idx - 1)
+        }
     }))
 )
+
+//TODO Need to fix the paginator for albums to be the same as photo paginator.

@@ -40,3 +40,11 @@ export const selectPhotoPaginator = createSelector(
     selectAppState,
     (state: AppState) => state.photoPagination
 )
+export const selectAlbumAscending = createSelector(
+    selectAppState,
+    (state: AppState) => state.pagination.ascending
+)
+export const selectPhotoAscending = createSelector(
+    selectAppState,
+    (state: AppState) => state.photoPagination.ascending
+)
