@@ -47,11 +47,11 @@ const enum Actions {
     LAST_PAGE = '[Pagination] go to last page',
     LAST_PAGE_SUCCESS = '[Pagination] go to last page successfully',
     PREVIOUS_PAGE = '[Pagination] go to previous page',
-    PREVIOUS_PAGE_SUCCESS = '[Pagination] go to last page successfully',
+    PREVIOUS_PAGE_SUCCESS = '[Pagination] go to previous page successfully',
     LOAD_ALBUM_PAGE = '[Pagination] load album page',
     LOAD_ALBUM_PAGE_SUCCESS = '[Pagination] load album page success',
     CHANGE_PAGE_SIZE = '[Pagination] change page size',
-
+    CHANGE_PAGE_SIZE_SUCCESS = '[Pagination] change page size successfully',
 
     //Pagination actions Photo list
     PHOTO_NEXT_PAGE = '[Photo Pagination] go to next page',
@@ -75,16 +75,20 @@ const enum Actions {
 }
 
 
+export const changePageSizeSuccess = createAction(
+    Actions.CHANGE_PAGE_SIZE_SUCCESS
+)
+
 export const previousPageSuccess = createAction(
     Actions.PREVIOUS_PAGE_SUCCESS,
 )
 export const nextPageSuccess = createAction(
     Actions.NEXT_PAGE_SUCCESS,
 )
-export const lastPageSuccess= createAction(
+export const lastPageSuccess = createAction(
     Actions.LAST_PAGE_SUCCESS
 )
-export const firstPageSuccess= createAction(
+export const firstPageSuccess = createAction(
     Actions.FIRST_PAGE_SUCCESS
 )
 
@@ -159,7 +163,7 @@ export const nextPage = createAction(
 
 )
 export const previousPage = createAction(
-    Actions.PREVIOUS_PAGE
+    Actions.PREVIOUS_PAGE,
 )
 
 

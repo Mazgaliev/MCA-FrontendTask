@@ -1,7 +1,7 @@
 import { createReducer, on } from "@ngrx/store";
 import { Album } from "../model/Albums";
 import { Photo } from "../model/Photo";
-import { changeAlbumPaginatorOrder, changePageSize, changePhotoPaginatorOrder, clearLoadedAlbum, clearPickedAlbum, clearPickedPhoto, deletePhoto, deletePhotoSuccess, editPhotoData, editPhotoDataSuccess, fetchAlbums, fetchAlbumsSuccess, fetchAllPhotosSuccess, firstPage, lastPage, lastPageSuccess, loadAlbumPageSuccess, loadAlbumPhotos, loadAlbumPhotosSuccess, nextPage, nextPageSuccess, photoChangePageSize, photoChangePageSizeSuccess, photoFirstPage, photoLastPage, photoLastPageSuccess, photoNextPage, photoPreviousPage, photoPreviousPageSuccess, photonextPageSuccess, previousPage, previousPageSuccess, refreshAlbumPaginator, refreshPhotosPaginator, savePhotoSuccess, setClickedAlbum, setPhoto, setPickedAlbumSuccess } from "./actions";
+import { changeAlbumPaginatorOrder, changePageSize, changePageSizeSuccess, changePhotoPaginatorOrder, clearLoadedAlbum, clearPickedAlbum, clearPickedPhoto, deletePhoto, deletePhotoSuccess, editPhotoData, editPhotoDataSuccess, fetchAlbums, fetchAlbumsSuccess, fetchAllPhotosSuccess, firstPage, lastPage, lastPageSuccess, loadAlbumPageSuccess, loadAlbumPhotos, loadAlbumPhotosSuccess, nextPage, nextPageSuccess, photoChangePageSize, photoChangePageSizeSuccess, photoFirstPage, photoLastPage, photoLastPageSuccess, photoNextPage, photoPreviousPage, photoPreviousPageSuccess, photonextPageSuccess, previousPage, previousPageSuccess, refreshAlbumPaginator, refreshPhotosPaginator, savePhotoSuccess, setClickedAlbum, setPhoto, setPickedAlbumSuccess } from "./actions";
 import { initialState } from "./state";
 
 
@@ -20,7 +20,7 @@ function checkNextPage(currentPage: number, lastPage: number): boolean {
     //returns true if we can switch to next page
     return (currentPage + 1 <= lastPage);
 }
-function checkPreviousPage(currentPage: number, lastPage: number): boolean {
+function checkPreviousPage(currentPage: number): boolean {
     return (currentPage - 1 >= 1);
 }
 
@@ -62,7 +62,7 @@ export const reducer = createReducer(
             currentPage: 1,
             start_idx: 1,
             end_idx: state.photoPagination.start_idx + state.photoPagination.pageSize,
-            photos: state.pickedAlbum!.photos.slice(0, state.photoPagination.end_idx - 1)
+            photos: state.pickedAlbum!.photos.slice(0, state.photoPagination.end_idx)
         }
     })),
     on(clearLoadedAlbum, (state) => ({
@@ -144,40 +144,52 @@ export const reducer = createReducer(
         pagination: {
             ...state.pagination,
             currentPage: 1,
-            start_idx: 1,
-            end_idx: 1 + state.pagination.pageSize,
+            start_idx: 0,
+            end_idx: 0 + state.pagination.pageSize,
             albums: state.albumsState.slice(0, state.pagination.pageSize)
         },
     })),
-    on(nextPage, (state) => ({
-        ...state,
-        pagination: {
-            ...state.pagination,
-            start_idx: checkNextPage(state.pagination.currentPage, state.pagination.lastPage) ? state.pagination.start_idx + state.pagination.pageSize : state.pagination.start_idx,
-            end_idx: checkNextPage(state.pagination.currentPage, state.pagination.lastPage) ? state.pagination.end_idx + state.pagination.pageSize : state.pagination.end_idx,
-            currentPage: checkNextPage(state.pagination.currentPage, state.pagination.lastPage) ? state.pagination.currentPage + 1 : state.pagination.currentPage
-            // albums: state.pagination.currentPage + 1 > state.pagination.lastPage ?
-            //     state.pagination.albums :
-            //     state.albumsState.slice(state.index - 1, state.index + state.pagination.pageSize - 1)
-            // filter(album => (album.id >= state.index && album.id < state.index + state.pagination.pageSize))
-        },
-    })),
+
+    on(nextPage, (state) => {
+        if (checkNextPage(state.pagination.currentPage, state.pagination.lastPage)) {
+            return {
+                ...state,
+                pagination: {
+                    ...state.pagination,
+                    start_idx: state.pagination.start_idx + state.pagination.pageSize,
+                    end_idx: state.pagination.end_idx + state.pagination.pageSize,
+                    currentPage: state.pagination.currentPage + 1,
+                }
+            }
+        }
+        return {
+            ...state
+        }
+    }),
     on(nextPageSuccess, (state) => ({
         ...state,
         pagination: {
             ...state.pagination,
-            albums: state.albumsState.slice(state.pagination.start_idx - 1, state.pagination.end_idx - 1)
+            albums: state.albumsState.slice(state.pagination.start_idx, state.pagination.end_idx)
         }
     })),
-    on(previousPage, (state) => ({
-        ...state,
-        pagination: {
-            ...state.pagination,
-            start_idx: checkPreviousPage(state.pagination.currentPage, state.pagination.lastPage) ? state.pagination.start_idx - state.pagination.pageSize : state.pagination.start_idx,
-            end_idx: checkPreviousPage(state.pagination.currentPage, state.pagination.lastPage) ? state.pagination.end_idx - state.pagination.pageSize : state.pagination.end_idx,
-            currentPage: checkPreviousPage(state.pagination.currentPage, state.pagination.lastPage) ? state.pagination.currentPage - 1 : state.pagination.currentPage,
-        },
-    })),
+
+    on(previousPage, (state) => {
+        if (checkPreviousPage(state.pagination.currentPage)) {
+            return {
+                ...state,
+                pagination: {
+                    ...state.pagination,
+                    start_idx: state.pagination.start_idx - state.pagination.pageSize,
+                    end_idx: state.pagination.end_idx - state.pagination.pageSize,
+                    currentPage: state.pagination.currentPage - 1,
+                }
+            }
+        }
+        return {
+            ...state
+        }
+    }),
     on(previousPageSuccess, (state) => ({
         ...state,
         pagination: {
@@ -192,8 +204,6 @@ export const reducer = createReducer(
             currentPage: state.pagination.lastPage,
             start_idx: (state.pagination.lastPage - 1) * state.pagination.pageSize,
             end_idx: (state.pagination.pageSize * state.pagination.lastPage),
-            // albums: state.albumsState.
-            //     filter(album => (album.id <= state.pagination.lastPage * state.pagination.pageSize && album.id > (state.pagination.lastPage - 1) * (state.pagination.pageSize)))
         },
 
     })),
@@ -211,10 +221,14 @@ export const reducer = createReducer(
             pageSize: newPageSize,
             end_idx: state.pagination.start_idx + newPageSize,
             lastPage: Math.round(state.albumsState.length / newPageSize),
-            currentPage: Math.ceil(state.pagination.start_idx / newPageSize),
-            albums: state.albumsState.
-                slice(state.pagination.start_idx - 1, state.pagination.start_idx + newPageSize - 1)
-
+            currentPage: Math.ceil((state.pagination.start_idx + 1) / newPageSize)
+        }
+    })),
+    on(changePageSizeSuccess, (state) => ({
+        ...state,
+        pagination: {
+            ...state.pagination,
+            albums: state.albumsState.slice(state.pagination.start_idx, state.pagination.end_idx)
         }
     })),
     on(photoFirstPage, (state) => ({
@@ -223,36 +237,48 @@ export const reducer = createReducer(
             ...state.photoPagination,
             photos: state.pickedAlbum!.photos.slice(0, state.photoPagination.pageSize),
             currentPage: 1,
-            start_idx: 1,
-            end_idx: 1 + state.photoPagination.pageSize,
+            start_idx: 0,
+            end_idx: 0 + state.photoPagination.pageSize,
             lastPage: Math.ceil(state.pickedAlbum!.photos.length / state.photoPagination.pageSize)
         }
     })),
-    on(photoNextPage, (state) => ({
-        ...state,
-        photoPagination: {
-            ...state.photoPagination,
-            currentPage: state.photoPagination.currentPage + 1 > state.photoPagination.lastPage ? state.photoPagination.currentPage : state.photoPagination.currentPage + 1,
-            start_idx: state.photoPagination.currentPage + 1 > state.photoPagination.lastPage ? state.photoPagination.start_idx : state.photoPagination.start_idx + state.photoPagination.pageSize,
-            end_idx: state.photoPagination.currentPage + 1 > state.photoPagination.lastPage ? state.photoPagination.end_idx : state.photoPagination.end_idx + state.photoPagination.pageSize,
+    on(photoNextPage, (state) => {
+        if (checkNextPage(state.photoPagination.currentPage, state.photoPagination.lastPage)) {
+            return {
+                ...state,
+                photoPagination: {
+                    ...state.photoPagination,
+                    currentPage: state.photoPagination.currentPage + 1,
+                    start_idx: state.photoPagination.start_idx + state.photoPagination.pageSize,
+                    end_idx: state.photoPagination.end_idx + state.photoPagination.pageSize
+                }
+            }
         }
-    })),
+        return {
+            ...state
+        }
+    }),
     on(photonextPageSuccess, (state) => ({
         ...state,
         photoPagination: {
             ...state.photoPagination,
-            photos: state.pickedAlbum!.photos.slice(state.photoPagination.start_idx - 1, state.photoPagination.end_idx - 1)
+            photos: state.pickedAlbum!.photos.slice(state.photoPagination.start_idx, state.photoPagination.end_idx)
         }
     })),
-    on(photoPreviousPage, (state) => ({
-        ...state,
-        photoPagination: {
-            ...state.photoPagination,
-            currentPage: state.photoPagination.currentPage - 1 < 1 ? state.photoPagination.currentPage : state.photoPagination.currentPage - 1,
-            start_idx: state.photoPagination.currentPage - 1 < 1 ? state.photoPagination.start_idx : state.photoPagination.start_idx - state.photoPagination.pageSize,
-            end_idx: state.photoPagination.currentPage - 1 < 1 ? state.photoPagination.end_idx : state.photoPagination.end_idx - state.photoPagination.pageSize,
+    on(photoPreviousPage, (state) => {
+        if (checkPreviousPage(state.photoPagination.currentPage)) {
+            return {
+                ...state,
+                photoPagination: {
+                    ...state.photoPagination,
+                    currentPage: state.photoPagination.currentPage - 1,
+                    start_idx: state.photoPagination.start_idx - state.photoPagination.pageSize,
+                    end_idx: state.photoPagination.end_idx - state.photoPagination.pageSize
+                }
+            }
         }
-    })),
+        return { ...state }
+    }),
     on(photoPreviousPageSuccess, (state) => ({
         ...state,
         photoPagination: {
@@ -287,7 +313,6 @@ export const reducer = createReducer(
             pageSize: newPageSize,
             lastPage: Math.ceil(state.pickedAlbum!.photos.length / newPageSize),
             currentPage: Math.ceil(state.photoPagination.start_idx / newPageSize),
-            // photos: state.pickedAlbum!.photos.slice(state.photoPagination.start_idx, state.photoPagination.start_idx + state.photoPagination.currentPage * newPageSize)
 
         }
     })),
@@ -342,9 +367,7 @@ export const reducer = createReducer(
         pagination: {
             ...state.pagination,
             albums: state.albumsState
-                .slice(state.pagination.start_idx - 1, state.pagination.end_idx - 1)
+                .slice(state.pagination.start_idx, state.pagination.end_idx)
         }
     }))
 )
-
-//TODO Need to fix the paginator for albums to be the same as photo paginator.

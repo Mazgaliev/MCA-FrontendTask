@@ -107,6 +107,7 @@ export class AppEffects {
             map(() => AppActions.previousPageSuccess())
         )
     )
+
     lastAlbumsPageSuccess = createEffect(
         () => this.actions$.pipe(
             ofType(AppActions.lastPage),
@@ -193,10 +194,17 @@ export class AppEffects {
         )
     )
 
-    changePage$ = createEffect(
+    changePhotoPage$ = createEffect(
         () => this.actions$.pipe(
             ofType(AppActions.photoChangePageSize),
             map(() => AppActions.photoChangePageSizeSuccess())
+        )
+    )
+
+    changeAlbumPageSize$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(AppActions.changePageSize),
+            map(() => AppActions.changePageSizeSuccess())
         )
     )
 }

@@ -36,8 +36,8 @@ export const initialState: AppState = {
         lastPage: 1,
         ascending: true,
         pageSize: 2,
-        start_idx: 1,
-        end_idx: 3,
+        start_idx: 0,
+        end_idx: 2,
     },
     photoPagination: {
 
@@ -46,8 +46,8 @@ export const initialState: AppState = {
         lastPage: 1,
         ascending: true,
         pageSize: 4,
-        start_idx: 1,
-        end_idx: 5,
+        start_idx: 0,
+        end_idx: 4,
     },
 
     aPag: undefined,
