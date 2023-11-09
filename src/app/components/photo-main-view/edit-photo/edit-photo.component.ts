@@ -25,7 +25,7 @@ export class EditPhotoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this.editPictureForm = this.formBuilder.group({
-      title: [this.photo?.title, [Validators.required, Validators.maxLength(50)]],
+      title: [this.photo?.title, [Validators.required, Validators.maxLength(80)]],
       url: [this.photo?.url, Validators.required],
       thumbnailUrl: [this.photo?.thumbnailUrl, Validators.required]
     });
@@ -33,7 +33,7 @@ export class EditPhotoComponent implements OnInit, OnDestroy {
     this.editPictureForm.get('title')!.valueChanges.
       pipe(takeUntil(this.destroy$)).
       subscribe(data => {
-        this.titleLengthWarning = data!.length > 50 ? true : false;
+        this.titleLengthWarning = data!.length > 80 ? true : false;
       })
   }
 
