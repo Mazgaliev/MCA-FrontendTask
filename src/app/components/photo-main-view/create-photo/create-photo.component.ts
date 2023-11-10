@@ -17,7 +17,7 @@ export class CreatePhotoComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.createPhotoForm = this.formBuilder.group({
-      title: ['', [Validators.required, Validators.maxLength(50)]],
+      title: ['', [Validators.required, Validators.maxLength(80)]],
       url: ['', Validators.required],
       thumbnailUrl: ['', Validators.required]
     });
