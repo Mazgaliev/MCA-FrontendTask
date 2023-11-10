@@ -60,7 +60,7 @@ export const reducer = createReducer(
             ...state.photoPagination,
             lastPage: Math.ceil(state.pickedAlbum!.photos.length / state.photoPagination.pageSize),
             currentPage: 1,
-            start_idx: 1,
+            start_idx: 0,
             end_idx: state.photoPagination.start_idx + state.photoPagination.pageSize,
             photos: state.pickedAlbum!.photos.slice(0, state.photoPagination.end_idx)
         }
@@ -312,7 +312,7 @@ export const reducer = createReducer(
             start_idx: state.photoPagination.start_idx,
             pageSize: newPageSize,
             lastPage: Math.ceil(state.pickedAlbum!.photos.length / newPageSize),
-            currentPage: Math.ceil(state.photoPagination.start_idx / newPageSize),
+            currentPage: Math.ceil((state.photoPagination.start_idx + 1) / newPageSize),
 
         }
     })),
@@ -320,14 +320,14 @@ export const reducer = createReducer(
         ...state,
         photoPagination: {
             ...state.photoPagination,
-            photos: state.pickedAlbum!.photos.slice(state.photoPagination.start_idx - 1, state.photoPagination.end_idx - 1)
+            photos: state.pickedAlbum!.photos.slice(state.photoPagination.start_idx, state.photoPagination.end_idx)
         }
     })),
     on(refreshPhotosPaginator, (state) => ({
         ...state,
         photoPagination: {
             ...state.photoPagination,
-            photos: state.pickedAlbum!.photos.slice(state.photoPagination.start_idx - 1, state.photoPagination.end_idx - 1),
+            photos: state.pickedAlbum!.photos.slice(state.photoPagination.start_idx, state.photoPagination.end_idx),
             lastPage: Math.ceil(state.pickedAlbum!.photos.length / state.photoPagination.pageSize)
         }
     })),
