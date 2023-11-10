@@ -7,7 +7,7 @@ export class TrunctuateTitlesPipe implements PipeTransform {
 
   transform(value: string): string {
 
-    return value.length > 30 ? value.slice(0, 30) + '...' : value;
+    return value.length > 20 ? value.slice(0, 20) + '...' : value;
   }
 
 }
